@@ -8,6 +8,9 @@ function exported by the express module.
 */
 const app = express();
 const Pool = require('pg').Pool;
+const {gets} = require('./requests');
+
+
 
 const pool = new Pool({
     user: 'ffblqtjf',
@@ -44,14 +47,7 @@ pool.connect((err, client, release) => {
     })
 })
 
-app.get('/testdata', (req, res, next) => {
-    console.log("TEST DATA :");
-    pool.query('Select * from test')
-        .then(testData => {
-            console.log(testData);
-            res.send(testData.rows);
-        })
-})
+gets(app,pool);
 
 // Require the Routes API
 // Create a Server and run it on the port 3000

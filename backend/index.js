@@ -8,7 +8,6 @@ function exported by the express module.
 */
 const app = express();
 const Pool = require('pg').Pool;
-const geter = require('gets');
 
 const pool = new Pool({
     user: 'zroexyid',
@@ -45,8 +44,14 @@ pool.connect((err, client, release) => {
     })
 })
 
-//wie funktioniert der müll?
-geter.defineGetRoutes(app);
+app.get('/testdata', (req, res, next) => {
+    console.log("TEST DATA :");
+    pool.query('Select * from test')
+        .then(testData => {
+            console.log(testData);
+            res.send(testData.rows);
+        })
+})
 
 // Require the Routes API
 // Create a Server and run it on the port 3000

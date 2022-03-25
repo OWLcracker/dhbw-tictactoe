@@ -5,12 +5,15 @@ Your account number is: 597558
 Your new database is now ready to use.
 
 To connect to your database use these details
-Server: sql11.freemysqlhosting.net
-Name: sql11477657
-Username: sql11477657
-Password: 598ZqKfS2E
+elephantsql.com/
+Server: kandula.db.elephantsql.com
+Name:  	ffblqtjf
+Username: ffblqtjf
+Password: WUUumjBi9nA5b-cgT39pl4pIWbu9-IKN
 Port number: 3306
 
+URL: postgres://ffblqtjf:WUUumjBi9nA5b-cgT39pl4pIWbu9-IKN@kandula.db.elephantsql.com/ffblqtjf
+APIkey: 7762254d-b7e6-4a76-8220-0e28a446b8c9
 phpMyAdmin
 phpMyAdmin is now available to administer your database.  phpMyAdmin will allow you to create, edit and remove tables and to back up and import your data.  Follow this link https://u2831340.ct.sendgrid.net/ls/click?upn=WOzEwDFUYbz8XP8cqLSZnAQTQSLW4TFkVH… and use the database details above to get started with your new database.
 
@@ -19,3 +22,12 @@ If you have any questions or problems, please reply to this email detailing your
 Do you want to host your own website? Fast and affordable.  Includes PHP, MySQL, Email and cPanel.  Click here to find out more
 
 Many thanks
+
+
+
+
+
+
+
+aeexfqkeb@10mail.org
+P7UK39uuqWuGqWg

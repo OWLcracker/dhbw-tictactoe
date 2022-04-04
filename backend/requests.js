@@ -5,10 +5,21 @@ const gets = (app, pool) => {
             .then(Users => {
                 console.log(Users);
                 res.send(Users.rows);
+
             })
     })
 }
 
+const posts = (app, pool) => {
+app.post('/login', (req, res) => {
+let user_name = req.body.user;
+let password = req.body.password;
+console.log("User name = "+user_name+", password is "+password);
+res.end('yes');
+});
+}
+
 module.exports = {
-    gets
+    gets,
+    posts
 }

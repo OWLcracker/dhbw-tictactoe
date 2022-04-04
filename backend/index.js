@@ -8,7 +8,7 @@ function exported by the express module.
 */
 const app = express();
 const Pool = require('pg').Pool;
-const {gets} = require('./requests');
+const {gets,posts} = require('./requests');
 
 
 
@@ -48,6 +48,7 @@ pool.connect((err, client, release) => {
 })
 
 gets(app,pool);
+posts(app,pool);
 
 // Require the Routes API
 // Create a Server and run it on the port 3000

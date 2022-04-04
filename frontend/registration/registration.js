@@ -1,22 +1,28 @@
+let usernameElem,
+    passwordElem,
+    passwordRepeatElem,
+    errorElem;
+
 window.addEventListener("load", () => {
-    let username = document.getElementById("username");
-    let password = document.getElementById("password");
-    let passwordRepeat = document.getElementById("passwordRepeat");
-    let btnRegister = document.getElementById("register");
-    let error = document.getElementById("error");
-    btnRegister.addEventListener("click", register);
+    usernameElem = document.getElementById("username");
+    passwordElem = document.getElementById("password");
+    passwordRepeatElem = document.getElementById("passwordRepeat");
+    errorElem = document.getElementById("error");
+    document.getElementById("register").addEventListener("click", register);
 });
 
 function register() {
-    if (password.value !== passwordRepeat.value) {
-        passwordRepeat.setCustomValidity("Passwords don't match.");
-        error.style.display = "block";
+    // Check input
+    if (usernameElem.value === "" || passwordElem.value === "" || passwordRepeatElem.value === ""
+        || passwordElem.value !== passwordRepeatElem.value) {
+        errorElem.style.display = "block";
         return;
     } else {
-        passwordRepeat.setCustomValidity("");
-        error.style.display = "none";
-    }
+        errorElem.style.display = "none";
 
-    let userJson = "{ \"username\": \"" + username.value + "\", \"password\": \"" + password.value + "\" }"
-    console.log(userJson);
+        // TODO Send user object to backend
+        let userJson = "{ \"username\": \"" + usernameElem.value + "\", \"password\": \"" + passwordElem.value + "\" }"
+
+        window.open("../menu/menu.html", "_self");
+    }
 }

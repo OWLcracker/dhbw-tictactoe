@@ -7,15 +7,16 @@
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
+<h1>TicTacToe</h1>
 <section class="form">
-<h2>Login To Your Account</h2>
-<p class="error">Error. Please enter correct Username &amp; Password.</p>
-<form class="loginbox" autocomplete="off">
-    <input id="username" type="text" placeholder="Username" required>
-    <input id="password" type="password" placeholder="Password" required>
-    <button id="submit">Login</button>
-    <p>Noch kein Account? Jetzt <a href="../registration/registration.html">registrieren</a>.</p>
-</form>
+    <h2>Login To Your Account</h2>
+    <p id="errorWrong" class="error">Error. Please enter correct username &amp; password.</p>
+    <p id="errorEmptyUsername" class="error">Error. Please enter a username.</p>
+    <p id="errorEmptyPassword" class="error">Error. Please enter a password.</p>
+    <input id="username" type="text" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+    <button id="login">Login</button>
+    <p>No account yet? <a href="../registration/registration.html">Register</a> now.</p>
 </section>
 </body>
 </html>

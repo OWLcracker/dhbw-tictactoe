@@ -15,10 +15,10 @@ h1 {
 }
 
 .form {
-    left: 50%;
     background: #ffffff;
     width: 50vw;
     max-width: 300px;
+    margin-bottom: 20px;
     padding: min(5vw, 40px) min(5vw, 40px) min(2.5vw, 20px) min(5vw, 40px);
     box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);
 }
@@ -29,6 +29,41 @@ h2 {
     color: #146FA9;
     font-size: 18px;
     font-weight: 400;
+}
+
+div {
+    display: flex;
+}
+
+.buttonEmpty {
+    background: rgba(20, 111, 169, 0);
+    color: #000;
+    border-width: 1px;
+    border-color: #146FA9;
+    margin-left: min(2.5vw, 20px);
+}
+
+.buttonFilled {
+    background: #146FA9;
+    color: #fff;
+    border: 0;
+}
+
+button {
+    cursor: pointer;
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.buttonFilled:hover {
+    background: #0b557c;
+}
+
+.buttonEmpty:hover {
+    background: #146FA9;
+    color: #fff;
 }
 
 input {
@@ -49,21 +84,6 @@ input:focus {
     border: 1px solid #146FA9;
 }
 
-button {
-    cursor: pointer;
-    background: #146FA9;
-    width: 100%;
-    padding: 10px 15px;
-    border: 0;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 400;
-}
-
-button:hover {
-    background: #0b557c;
-}
-
 .error {
     margin: 0 0 20px;
     display: none;
@@ -71,7 +91,24 @@ button:hover {
     font-size: 14px;
 }
 
-.cancel {
-    font-size: 14px;
-    text-align: center;
+footer > button {
+    background: #cecece;
+    cursor: pointer;
+    width: 50vw;
+    max-width: 300px;
+    padding: 10px 15px;
+    border: 0;
+    color: #000;
+    font-size: 18px;
+    font-weight: 400;
+    margin-top: 2vmin;
+    margin-left: min(5vw, 40px);
+    margin-right: min(5vw, 40px);
+    font-family: "Comic Sans MS";
+}
+
+footer > button:hover {
+    background: #0b557c !important;
+    color: #fff;
+    text-decoration-line: underline;
 }

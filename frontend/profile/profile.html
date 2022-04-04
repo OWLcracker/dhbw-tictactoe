@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TicTacToe</title>
+    <script src="profile.js"></script>
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+<h1>Profile</h1>
+<section class="form">
+    <h2>Username</h2>
+    <p id="errorUsername" class="error">Error. Please enter a valid username.</p>
+    <input id="username" type="text" placeholder="Username" required>
+    <div>
+        <button id="saveUsername" class="buttonFilled">Save</button>
+        <button id="discardUsername" class="buttonEmpty">Discard</button>
+    </div>
+</section>
+<section class="form">
+    <h2>Change Password</h2>
+    <p id="errorPassword" class="error">Error. Please enter a valid password.</p>
+    <input id="currentPassword" type="password" placeholder="Current Password" required>
+    <input id="newPassword" type="password" placeholder="New Password" required>
+    <input id="newPasswordRepeat" type="password" placeholder="Repeat New Password" required>
+    <div>
+        <button id="savePassword" class="buttonFilled">Save</button>
+        <button id="discardPassword" class="buttonEmpty">Discard</button>
+    </div>
+</section>
+<footer>
+    <button id="menu">Menu</button>
+</footer>
+</body>
+</html>

@@ -28,6 +28,8 @@ entire body portion of an incoming
 request stream and exposes it on req.body
 */
 const bodyParser = require('body-parser');
+var cors = require('cors');
+app.use(cors());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }));
 

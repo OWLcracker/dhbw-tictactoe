@@ -11,7 +11,7 @@ window.addEventListener("load", () => {
     document.getElementById("register").addEventListener("click", register);
 });
 
-function register() {
+async function register() {
     // Check input
     if (usernameElem.value === "" || passwordElem.value === "" || passwordRepeatElem.value === ""
         || passwordElem.value !== passwordRepeatElem.value) {
@@ -21,8 +21,16 @@ function register() {
         errorElem.style.display = "none";
 
         // TODO Send user object to backend
-        let userJson = "{ \"username\": \"" + usernameElem.value + "\", \"password\": \"" + passwordElem.value + "\" }"
+        let userJson = "{ \"user\": \"" + usernameElem.value + "\", \"password\": \"" + passwordElem.value + "\" }"
+        response = await fetch('http://localhost:3000/login',
+            {
+                method: 'POST',
+                body: userJson
+            });
 
-        window.open("../menu/menu.html", "_self");
+        console.log(response);
+
+
+        //window.open("../menu/menu.html", "_self");
     }
 }

@@ -12,25 +12,42 @@ window.addEventListener("load", () => {
 });
 
 async function register() {
+    let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})');
     // Check input
     if (usernameElem.value === "" || passwordElem.value === "" || passwordRepeatElem.value === ""
         || passwordElem.value !== passwordRepeatElem.value) {
+        errorElem.innerHTML = "Error. Please enter a valid username &amp; password.";
         errorElem.style.display = "block";
         return;
-    } else {
+    }
+    else if(!strongPassword.test(passwordElem.value)) {
+        errorElem.innerHTML = "Error. Your password must contain at least 8 characters, 1 uppercase letter, " +
+                                "1 lowercase letter, 1 digit and 1 special character.";
+        errorElem.style.display = "block";
+        return;
+    }
+    else {
         errorElem.style.display = "none";
 
-        // TODO Send user object to backend
-        let userJson = "{ \"user\": \"" + usernameElem.value + "\", \"password\": \"" + passwordElem.value + "\" }"
-        response = await fetch('http://localhost:3000/login',
+        let userJson = JSON.parse('{ "user": "' + username.value + '", "password": "' + password.value + '" }');
+        let isError = false;
+        let response = await fetch('http://localhost:3000/login',
             {
                 method: 'POST',
                 body: userJson
-            });
-
-        console.log(response);
-
-
-        //window.open("../menu/menu.html", "_self");
+            }).catch((error) => {
+            console.error('Error:', error);
+            isError = true;
+        });
+        if (isError) {
+            errorElem.innerHTML = 'Error. Please try again later.';
+            errorElem.style.display = "block";
+        }
+        else if (response.ok) {
+            window.open("../menu/menu.html", "_self");
+        } else {
+            errorElem.innerHTML = 'Error. User already exists.'
+            errorElem.style.display = "block";
+        }
     }
 }

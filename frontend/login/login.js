@@ -1,15 +1,15 @@
 window.addEventListener("load", () => {
-    let username = document.getElementById("username");
-    let password = document.getElementById("password");
-    let btnLogin = document.getElementById("login");
-    let errorWrong = document.getElementById("errorWrong");
-    let errorEmptyUsername = document.getElementById("errorEmptyUsername");
-    let errorEmptyPassword = document.getElementById("errorEmptyPassword");
+     username = document.getElementById("username");
+     password = document.getElementById("password");
+     btnLogin = document.getElementById("login");
+     errorWrong = document.getElementById("errorWrong");
+     errorEmptyUsername = document.getElementById("errorEmptyUsername");
+     errorEmptyPassword = document.getElementById("errorEmptyPassword");
 
     btnLogin.addEventListener("click", login);
 });
 
-function login() {
+async function login() {
     // Check input
     if (username.value === "") {
         errorEmptyUsername.style.display = "block";
@@ -23,10 +23,21 @@ function login() {
         return;
     }
 
-    // TODO Check if account is existing
-    let success = true;
+    let userJson = JSON.parse('{ "user": "' + username.value + '", "password": "'+ password.value + '" }');
+    let response = await fetch('http://localhost:3000/login',
+        {
+            method: 'POST',
+            body: userJson
+        }).catch((error) => {
+        console.error('Error:', error);
+        isError = true;
+    });
 
-    if (success) {
+
+
+    console.log(response);
+
+    if (response.statusCode===200) {
         errorWrong.style.display = "none";
         errorEmptyUsername.style.display = "none";
         errorEmptyPassword.style.display = "none";

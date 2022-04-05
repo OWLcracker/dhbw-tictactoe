@@ -22,7 +22,7 @@ async function register() {
 
         // TODO Send user object to backend
         let userJson = "{ \"user\": \"" + usernameElem.value + "\", \"password\": \"" + passwordElem.value + "\" }"
-        response = await fetch('http://localhost:3000/login',
+        response = await fetch('http://localhost:3000/register',
             {
                 method: 'POST',
                 body: userJson

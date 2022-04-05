@@ -33,8 +33,11 @@ async function register() {
         let isError = false;
         let response = await fetch('http://localhost:3000/login',
             {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 method: 'POST',
-                body: userJson
+                body: JSON.stringify(userJson)
             }).catch((error) => {
             console.error('Error:', error);
             isError = true;
@@ -43,7 +46,7 @@ async function register() {
             errorElem.innerHTML = 'Error. Please try again later.';
             errorElem.style.display = "block";
         }
-        else if (response.ok) {
+        else if (response.status===200) {
             window.open("../menu/menu.html", "_self");
         } else {
             errorElem.innerHTML = 'Error. User already exists.'

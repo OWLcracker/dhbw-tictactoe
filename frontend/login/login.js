@@ -24,20 +24,22 @@ async function login() {
     }
 
     let userJson = JSON.parse('{ "user": "' + username.value + '", "password": "'+ password.value + '" }');
+    console.log(userJson);
     let response = await fetch('http://localhost:3000/login',
         {
+            headers: {
+                'Content-Type': 'application/json'
+            },
             method: 'POST',
-            body: userJson
+            body: JSON.stringify(userJson)
         }).catch((error) => {
         console.error('Error:', error);
         isError = true;
     });
 
-
-
     console.log(response);
 
-    if (response.statusCode===200) {
+    if (response.status===200) {
         errorWrong.style.display = "none";
         errorEmptyUsername.style.display = "none";
         errorEmptyPassword.style.display = "none";

@@ -7,6 +7,9 @@ window.addEventListener("load", () => {
      errorEmptyPassword = document.getElementById("errorEmptyPassword");
 
     btnLogin.addEventListener("click", login);
+    username.addEventListener("keypress", enterLogin);
+    password.addEventListener("keypress", enterLogin);
+
 });
 
 async function login() {
@@ -48,5 +51,11 @@ async function login() {
         errorWrong.style.display = "block";
         errorEmptyUsername.style.display = "none";
         errorEmptyPassword.style.display = "none";
+    }
+}
+
+function enterLogin(){
+    if(event.key === "Enter"){
+        login();
     }
 }

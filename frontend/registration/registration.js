@@ -12,10 +12,15 @@ window.addEventListener("load", () => {
     usernameElem = document.getElementById("username");
     pwBar = document.getElementById("password-bar");
     passwordElem = document.getElementById("password");
-    passwordElem.addEventListener("input", check);
     passwordRepeatElem = document.getElementById("passwordRepeat");
     errorElem = document.getElementById("error");
-    document.getElementById("register").addEventListener("click", register);
+    regBtn =  document.getElementById("register");
+
+    usernameElem.addEventListener("keypress", enterRegister);
+    passwordElem.addEventListener("input", check);
+    passwordElem.addEventListener("keypress", enterRegister);
+    passwordRepeatElem.addEventListener("keypress", enterRegister);
+    regBtn.addEventListener("click", register);
 });
 function check(){
     if(passwordElem.value===""){
@@ -40,13 +45,11 @@ async function register() {
         || passwordElem.value !== passwordRepeatElem.value) {
         errorElem.innerHTML = "Error. Please enter a valid username &amp; password.";
         errorElem.style.display = "block";
-        return;
     }
     else if(!strongPassword.test(passwordElem.value)) {
         errorElem.innerHTML = "Error. Your password must contain at least 8 characters, 1 uppercase letter, " +
                                 "1 lowercase letter, 1 digit and 1 special character.";
         errorElem.style.display = "block";
-        return;
     }
     else {
         errorElem.style.display = "none";
@@ -74,5 +77,11 @@ async function register() {
             errorElem.innerHTML = 'Error. User already exists.'
             errorElem.style.display = "block";
         }
+    }
+}
+
+function enterRegister(){
+    if(event.key ==="Enter"){
+        register();
     }
 }

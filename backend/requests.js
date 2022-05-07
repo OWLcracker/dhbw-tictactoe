@@ -24,6 +24,27 @@ const user_authenticate = async (user, password, pool) => {
         return false;
     }
 }
+const getUserID = async (user_id, pool) => {
+    let statement = "Select user_id from users where username = $1";
+    let values = [user_id];
+    let resp, error;
+    try {
+        resp = await pool.query(statement, values)
+    } catch (err) {
+        error = err;
+    }
+    return {
+        resp,
+        error
+    }
+}
+
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
 
 const getSession = async (user, pool) => {
     let statement = "Select * from sessions as sess, users where sess.user_id = users.user_id and sess.user_id = $1";
@@ -31,7 +52,22 @@ const getSession = async (user, pool) => {
     try {
         resp = await pool.query(statement, values)
         if(resp.rows[0]){
-           // if(resp.rows[0].creationDate > now?); // hier weiter machen
+            const date = new Date(resp.rows[0].creationDate);
+            if(date.getTime() + (1000 * 60 * 60 * 24) > new Date().getTime()){
+                return resp.rows[0];
+            } else {
+                let uuid = uuidv4();
+                let statement = "INSERT INTO sessions (sessionkey, user_id) VALUES ($1, $2)";
+                let values = [uuid, response.resp.rows[0].user_id];
+                pool.query(statement, values)
+                    .then(()=>{
+                        res.send(uuid); // hier euer cookie
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        res.status(400).send();
+                    })
+            }
         }
     } catch (err) {
         return false;
@@ -57,8 +93,17 @@ app.post('/login', (req, res) => {
 
     user_authenticate(user_name, password, pool).then((bool)=>{
         if(bool){
-            //generate session key and set it in db
-            res.send("generated session key");
+            getUserID(user_name, pool).then((user_id)=>{
+                getSession(user_id.resp.rows[0].user_id, pool).then((session)=>{
+                    res.send(session);
+
+                }).catch((err)=>{
+                    res.send(err);
+                })
+            }
+            ).catch((err)=>{
+                res.send(err);
+            })
         }else{
             res.status(404).send();
         }
@@ -79,16 +124,31 @@ app.post('/login', (req, res) => {
                 }else{ // User anlegen
                     let statement = "INSERT INTO users (username, password) VALUES ($1, $2)";
                     let values = [user_name, password];
-
-                    pool.query(statement, values, (err, resp) => {
-                        if (err) {
-                            console.log(err.stack)
-                            res.end("fail");
-                        } else {
-                            res.end("worked");
-
-                        }
-                    })
+                    pool.query(statement, values)
+                        .then(()=>{
+                            getUserID(user_name, pool).then((response)=>{
+                                if(response.error){
+                                    console.log(response.error);
+                                    res.status(400).send();
+                                }
+                                else{
+                                    let uuid = uuidv4();
+                                    let statement = "INSERT INTO sessions (sessionkey, user_id) VALUES ($1, $2)";
+                                    let values = [uuid, response.resp.rows[0].user_id];
+                                    pool.query(statement, values)
+                                        .then(()=>{
+                                            res.send(uuid); // hier euer cookie
+                                        })
+                                        .catch((err)=>{
+                                            console.log(err);
+                                            res.status(400).send();
+                                        })
+                                }
+                            })
+                        })
+                        .catch((err)=>{
+                            res.status(500).send();
+                        })
                 }
             }
         });

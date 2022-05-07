@@ -9,13 +9,21 @@ window.addEventListener("load", () => {
        let newDoc = parser.parseFromString(htmlString, 'text/html');
 
        //Replace Main of the original HTML
-       let main = document.getElementById("main");
-       main.remove();
-       main = newDoc.getElementById("main");
-       document.body.appendChild(main);
+       let mainOld = document.getElementById("main");
+       mainOld.id = "mainOld";
+       let mainNew = newDoc.getElementById("main");
+       mainNew.style.display = "none";
+       document.body.appendChild(mainNew);
 
        //Replace Stylesheet
-       document.getElementById("style").href =".." + id + ".css";
+       let styleOld = document.getElementById("style");
+       styleOld.id = "styleOld";
+       let styleNew = document.createElement("link");
+       styleNew.setAttribute("rel","stylesheet");
+       styleNew.setAttribute("id","style");
+       styleNew.setAttribute("href", ".." + id + ".css");
+       document.head.appendChild(styleNew);
+
 
        //Replace Scripts of the original HTML
        let script = document.getElementById("script");
@@ -27,6 +35,11 @@ window.addEventListener("load", () => {
        script.innerHTML = scriptString;
        document.body.appendChild(script);
 
+       //Wait until the end to remove old style and make new main element visible
+       //to ensure a smooth transition
+       mainOld.remove();
+       styleOld.remove();
+       mainNew.style.display = "block";
        document.title = `${title}`;
     }
 

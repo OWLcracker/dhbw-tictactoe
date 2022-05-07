@@ -1,0 +1,98 @@
+body {
+    background-attachment: fixed;
+    background-image: linear-gradient(to bottom right, #249be7, #003c62);
+    text-align: center;
+}
+
+h1 {
+    color: #fff;
+    font-size: 70px;
+    text-align: center;
+    font-family: "Comic Sans MS";
+}
+
+#gameHint {
+    color: #fff;
+    font-family: "Comic Sans MS";
+}
+
+#gameArea {
+    display: flex;
+}
+
+.score {
+    width: 15vw;
+    color: #000;
+    font-size: 2vw;
+    font-family: "Comic Sans MS";
+    background-image: url("Score.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.scoreLabel {
+    margin-top: 3vw;
+}
+
+#grid {
+    width: 60vmin;
+    height: 60vmin;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin: auto;
+}
+
+#grid button {
+    width: 20vmin;
+    height: 20vmin;
+    background: white;
+    border: 1px solid #0b557c;
+    margin: 0;
+}
+
+#grid [aria-label="hoverx"]:hover {
+    background-size: cover;
+    background-image: url('TicTacToe_X.png');
+}
+
+#grid [aria-label="hovero"]:hover {
+    background-size: cover;
+    background-image: url('TicTacToe_O.png');
+}
+
+#grid [aria-label="x"] {
+    background-size: cover;
+    background-image: url('TicTacToe_X.png');
+}
+
+#grid [aria-label="o"] {
+    background-size: cover;
+    background-image: url('TicTacToe_O.png');
+}
+
+footer > button {
+    background: #fff;
+    cursor: pointer;
+    width: 50vw;
+    max-width: 300px;
+    padding: 10px 15px;
+    border: 0;
+    color: #000;
+    font-size: 18px;
+    font-weight: 400;
+    margin-top: 2vmin;
+    margin-left: min(5vw, 40px);
+    margin-right: min(5vw, 40px);
+    font-family: "Comic Sans MS";
+}
+
+footer > button:hover {
+    background: #0b557c !important;
+    color: #fff;
+    text-decoration-line: underline;
+}
+
+#menu {
+    background: #cecece;
+}

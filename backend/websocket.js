@@ -6,39 +6,44 @@ function openServer() {
   const wss = new WebSocket.Server({ port: 8080 });
   let queue = undefined;
 
+  function wsOnMessage(wsSelf, wsOther, message) {
+    const msg = message.toString();
+
+    if (msg.startsWith('move:') || msg === 'restart' || msg === 'stop') {
+      wsOther.send(msg);
+    }
+  }
+
   async function startMatch(ws1, ws2) {
     ws1.on("message", (message) => {
-      let msg = message.toString();
-      if(msg.startsWith("move:")) {
-        ws2.send(msg.substring(5));
-      }
+      wsOnMessage(ws1, ws2, message);
     });
     ws2.on("message", (message) => {
-      let msg = message.toString();
-      if(msg.startsWith("move:")) {
-        ws1.send(msg.substring(5));
-      }
+      wsOnMessage(ws2, ws1, message);
     });
-    console.log("Match started");
-    ws1.send("start");
+
+    ws1.send("start_p1");
+    ws2.send("start_p2");
+
+    console.log("Match started.");
   }
 
   wss.on("connection", (ws) => {
     ws.on("message", (message) => {
-      let msg = message.toString();
-      if(msg.startsWith("QUEUE")) {
-        if(queue === undefined) {
+      const msg = message.toString();
+      if (msg.startsWith("QUEUE")) {
+        if (queue === undefined) {
           queue = ws;
           console.log("Queueing...");
         } else {
-          let partner = queue;
+          const partner = queue;
           queue = undefined;
           startMatch(partner, ws);
         }
       }
     });
     ws.on("close", () => {
-      console.log("Client disconnected");
+      console.log("Client disconnected.");
     });
   });
 }

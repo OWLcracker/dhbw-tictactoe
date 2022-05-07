@@ -9,6 +9,7 @@ function exported by the express module.
 const app = express();
 const Pool = require('pg').Pool;
 const {gets,posts} = require('./requests');
+const {openServer} = require('./websocket');
 
 
 
@@ -51,6 +52,7 @@ pool.connect((err, client, release) => {
 
 gets(app,pool);
 posts(app,pool);
+openServer();
 
 // Require the Routes API
 // Create a Server and run it on the port 3000

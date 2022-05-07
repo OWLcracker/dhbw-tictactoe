@@ -95,9 +95,9 @@ const posts = (app, pool) => {
             if (bool) {
                 getUserID(user_name, pool).then((user_id) => {
                     getSession(user_id.resp.rows[0].user_id, pool).then((session) => {
-                        // const sessionkey = 'aölskdjfaölskdfjaösdlkf';
+                         const sessionkey = 'aölskdjfaölskdfjaösdlkf';
                         // res.setHeader('Access-Control-Allow-Headers', true);
-                        // res.setHeader('Set-Cookie', ['sessionkey=' + sessionkey + '; HttpOnly=false; path=/']);
+                         res.setHeader('Set-Cookie', ['sessionkey=' + sessionkey + ';Path=/;Secure' ]);
                         // console.log(res.getHeaders());
                         res.send(session);
 

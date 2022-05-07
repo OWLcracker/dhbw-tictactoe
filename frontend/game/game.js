@@ -1,19 +1,11 @@
-let scores,
-    player,
-    computer;
 
-let gameHintElem,
-    scoresElem,
-    fieldsElem;
+    delay = 1000;
 
-let delay = 1000;
-
-window.addEventListener("load", () => {
     gameHintElem = document.getElementById("gameHint");
     scoresElem = document.querySelectorAll(".scoreValue")
     fieldsElem = document.querySelectorAll("#grid button");
 
-    let grid = document.getElementById("grid");
+    grid = document.getElementById("grid");
     grid.addEventListener("mouseover", hoverEffectIn);
     grid.addEventListener("mouseout", hoverEffectOut);
     grid.addEventListener("click", playerTurn);
@@ -22,7 +14,6 @@ window.addEventListener("load", () => {
     document.getElementById("menu").addEventListener("click", menu);
 
     initGame();
-});
 
 function initGame() {
     scores = [0, 0];
@@ -199,5 +190,5 @@ function restart() {
 }
 
 function menu() {
-    window.open("../menu/menu.html", "_self");
+    location.href = "#/menu/";
 }

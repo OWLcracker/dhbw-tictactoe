@@ -1,25 +1,9 @@
-let socket;
-
-let isStartingPlayer,
-    playerIsWaitingForRestart,
-    opponentIsWaitingForRestart;
-
-let scores,
-    player,
-    opponent;
-
-let gameHintElem,
-    scoresElem,
-    fieldsElem,
-    restartElem;
-
-window.addEventListener("load", () => {
     gameHintElem = document.getElementById("gameHint");
     scoresElem = document.querySelectorAll(".scoreValue")
     fieldsElem = document.querySelectorAll("#grid button");
     restartElem = document.getElementById("restart");
 
-    let grid = document.getElementById("grid");
+    grid = document.getElementById("grid");
     grid.addEventListener("mouseover", hoverEffectIn);
     grid.addEventListener("mouseout", hoverEffectOut);
     grid.addEventListener("click", playerTurn);
@@ -32,7 +16,6 @@ window.addEventListener("load", () => {
     restartElem.disabled = true;
     disableAllFields();
     gameHintElem.innerHTML = "Waiting for opponent to connect...";
-});
 
 function initSocket() {
     socket = new WebSocket('ws://localhost:8080');
@@ -272,5 +255,5 @@ function restart() {
 
 function menu() {
     socket.send('stop');
-    window.open("../menu/menu.html", "_self");
+    location.href = "#/menu/";
 }

@@ -43,6 +43,9 @@ function openServer() {
       }
     });
     ws.on("close", () => {
+      if (queue === ws) {
+        queue = undefined;
+      }
       console.log("Client disconnected.");
     });
   });

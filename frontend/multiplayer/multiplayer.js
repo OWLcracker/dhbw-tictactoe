@@ -1,32 +1,39 @@
-    gameHintElem = document.getElementById("gameHint");
-    scoresElem = document.querySelectorAll(".scoreValue")
-    fieldsElem = document.querySelectorAll("#grid button");
-    restartElem = document.getElementById("restart");
+window.addEventListener('popstate', function (event) {
+    if (!(socket.readyState === WebSocket.CLOSING || socket.readyState === WebSocket.CLOSED)) {
+        socket.send('stop');
+        socket.close();
+    }
+});
 
-    grid = document.getElementById("grid");
-    grid.addEventListener("mouseover", hoverEffectIn);
-    grid.addEventListener("mouseout", hoverEffectOut);
-    grid.addEventListener("click", playerTurn);
+gameHintElem = document.getElementById("gameHint");
+scoresElem = document.querySelectorAll(".scoreValue")
+fieldsElem = document.querySelectorAll("#grid button");
+restartElem = document.getElementById("restart");
 
-    restartElem.addEventListener("click", restart);
-    document.getElementById("menu").addEventListener("click", menu);
+grid = document.getElementById("grid");
+grid.addEventListener("mouseover", hoverEffectIn);
+grid.addEventListener("mouseout", hoverEffectOut);
+grid.addEventListener("click", playerTurn);
 
-    initSocket();
+restartElem.addEventListener("click", restart);
+document.getElementById("menu").addEventListener("click", menu);
 
-    restartElem.disabled = true;
-    disableAllFields();
-    gameHintElem.innerHTML = "Waiting for opponent to connect...";
+initSocket();
+
+restartElem.disabled = true;
+disableAllFields();
+gameHintElem.innerHTML = "Waiting for opponent to connect...";
 
 function initSocket() {
     socket = new WebSocket('ws://localhost:8080');
-    
-    socket.onopen = function(e) {
+
+    socket.onopen = function (e) {
         console.log('Socket connection established successfully.');
         socket.send('QUEUE');
         console.log('Waiting for opponent to connect...');
     }
 
-    socket.onmessage = function(event) {
+    socket.onmessage = function (event) {
         const msg = event.data.toString();
 
         if (msg === 'start_p1' || msg === 'start_p2') {
@@ -58,7 +65,7 @@ function initSocket() {
         }
     }
 
-    socket.onclose = function(event) {
+    socket.onclose = function (event) {
         if (event.wasClean) {
             console.log('Socket connection was closed cleanly.');
         } else {
@@ -66,7 +73,7 @@ function initSocket() {
         }
     }
 
-    socket.onerror = function(e) {
+    socket.onerror = function (e) {
         console.log('Socket error.', e);
     }
 }
@@ -184,10 +191,10 @@ function checkWinner() {
         }
 
         // Horizontal
-        if (fieldsElem[i*3].getAttribute("aria-label") !== ""
-            && fieldsElem[i*3].getAttribute("aria-label") === fieldsElem[i*3+1].getAttribute("aria-label")
-            && fieldsElem[i*3+1].getAttribute("aria-label") === fieldsElem[i*3+2].getAttribute("aria-label")) {
-            winner = fieldsElem[i*3].getAttribute("aria-label");
+        if (fieldsElem[i * 3].getAttribute("aria-label") !== ""
+            && fieldsElem[i * 3].getAttribute("aria-label") === fieldsElem[i * 3 + 1].getAttribute("aria-label")
+            && fieldsElem[i * 3 + 1].getAttribute("aria-label") === fieldsElem[i * 3 + 2].getAttribute("aria-label")) {
+            winner = fieldsElem[i * 3].getAttribute("aria-label");
             break;
         }
     }
@@ -255,5 +262,6 @@ function restart() {
 
 function menu() {
     socket.send('stop');
+    socket.close();
     location.href = "#/menu/";
 }

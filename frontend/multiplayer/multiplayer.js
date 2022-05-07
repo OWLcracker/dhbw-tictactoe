@@ -10,23 +10,28 @@ let scores,
 
 let gameHintElem,
     scoresElem,
-    fieldsElem;
+    fieldsElem,
+    restartElem;
 
 window.addEventListener("load", () => {
     gameHintElem = document.getElementById("gameHint");
     scoresElem = document.querySelectorAll(".scoreValue")
     fieldsElem = document.querySelectorAll("#grid button");
+    restartElem = document.getElementById("restart");
 
     let grid = document.getElementById("grid");
     grid.addEventListener("mouseover", hoverEffectIn);
     grid.addEventListener("mouseout", hoverEffectOut);
     grid.addEventListener("click", playerTurn);
 
-    document.getElementById("restart").addEventListener("click", restart);
+    restartElem.addEventListener("click", restart);
     document.getElementById("menu").addEventListener("click", menu);
 
     initSocket();
-    initGame();
+
+    restartElem.disabled = true;
+    disableAllFields();
+    gameHintElem.innerHTML = "Waiting for opponent to connect...";
 });
 
 function initSocket() {
@@ -56,10 +61,17 @@ function initSocket() {
                 startGame();
             }
         } else if (msg === 'stop') {
-            gameHintElem.innerHTML = "Opponent disconnected. You've won.";
             disableAllFields();
-            scores[0]++;
-            scoresElem[0].innerHTML = scores[0];
+
+            // Check if game was running
+            if (restartElem.disabled) {
+                gameHintElem.innerHTML = "Opponent disconnected. You've won.";
+                scores[0]++;
+                scoresElem[0].innerHTML = scores[0];
+            } else {
+                gameHintElem.innerHTML = "Opponent disconnected.";
+                restartElem.disabled = true;
+            }
         }
     }
 
@@ -94,14 +106,16 @@ function initGame() {
     scoresElem[0].innerHTML = 0;
     scoresElem[1].innerHTML = 0;
 
+    disableAllFields();
+
     console.log('Game initialization finished.');
 }
 
 function startGame() {
     // Reset game parameters
+    restartElem.disabled = true;
     for (let i = 0; i < fieldsElem.length; i++) {
         fieldsElem[i].setAttribute("aria-label", "");
-        fieldsElem[i].removeAttribute("disabled");
     }
 
     console.log('Game has started.');
@@ -109,10 +123,10 @@ function startGame() {
     if (isStartingPlayer) {
         // Player starts
         gameHintElem.innerHTML = "You're player " + player + ". It's your turn.";
+        enableRemainingFields();
     } else {
         // Opponent starts
         gameHintElem.innerHTML = "You're player " + player + ". Waiting for player " + opponent + "'s turn.";
-        disableAllFields();
     }
 }
 
@@ -152,6 +166,9 @@ function playerTurn(e) {
     if (!isWinnerExisting && !isFinished) {
         // It's opponent's turn now
         gameHintElem.innerHTML = "Waiting for player " + opponent + "'s turn.";
+    } else {
+        // Game has ended
+        restartElem.disabled = false;
     }
 }
 
@@ -165,6 +182,9 @@ function opponentTurn(field) {
         // It's player's turn now
         gameHintElem.innerHTML = "It's your turn.";
         enableRemainingFields();
+    } else {
+        // Game has ended
+        restartElem.disabled = false;
     }
 }
 

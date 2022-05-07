@@ -1,4 +1,4 @@
-const {response} = require("express");
+const { response } = require("express");
 
 const user_exists = async (user, pool) => {
     let statement = "Select * from users where username = $1";
@@ -51,19 +51,19 @@ const getSession = async (user, pool) => {
     let values = [user];
     try {
         resp = await pool.query(statement, values)
-        if(resp.rows[0]){
+        if (resp.rows[0]) {
             const date = new Date(resp.rows[0].creationDate);
-            if(date.getTime() + (1000 * 60 * 60 * 24) > new Date().getTime()){
+            if (date.getTime() + (1000 * 60 * 60 * 24) > new Date().getTime()) {
                 return resp.rows[0];
             } else {
                 let uuid = uuidv4();
                 let statement = "INSERT INTO sessions (sessionkey, user_id) VALUES ($1, $2)";
                 let values = [uuid, response.resp.rows[0].user_id];
                 pool.query(statement, values)
-                    .then(()=>{
+                    .then(() => {
                         res.send(uuid); // hier euer cookie
                     })
-                    .catch((err)=>{
+                    .catch((err) => {
                         console.log(err);
                         res.status(400).send();
                     })
@@ -87,66 +87,70 @@ const gets = (app, pool) => {
 }
 
 const posts = (app, pool) => {
-app.post('/login', (req, res) => {
-    let user_name = req.body.user;
-    let password = req.body.password;
+    app.post('/login', (req, res) => {
+        let user_name = req.body.user;
+        let password = req.body.password;
 
-    user_authenticate(user_name, password, pool).then((bool)=>{
-        if(bool){
-            getUserID(user_name, pool).then((user_id)=>{
-                getSession(user_id.resp.rows[0].user_id, pool).then((session)=>{
-                    res.send(session);
+        user_authenticate(user_name, password, pool).then((bool) => {
+            if (bool) {
+                getUserID(user_name, pool).then((user_id) => {
+                    getSession(user_id.resp.rows[0].user_id, pool).then((session) => {
+                        // const sessionkey = 'aölskdjfaölskdfjaösdlkf';
+                        // res.setHeader('Access-Control-Allow-Headers', true);
+                        // res.setHeader('Set-Cookie', ['sessionkey=' + sessionkey + '; HttpOnly=false; path=/']);
+                        // console.log(res.getHeaders());
+                        res.send(session);
 
-                }).catch((err)=>{
+                    }).catch((err) => {
+                        res.send(err);
+                    })
+                }
+                ).catch((err) => {
                     res.send(err);
                 })
+            } else {
+                res.status(404).send();
             }
-            ).catch((err)=>{
-                res.send(err);
-            })
-        }else{
-            res.status(404).send();
-        }
-    });
+        });
 
-});
+    });
     app.post('/register', (req, res) => {
 
         let user_name = req.body.user;
         let password = req.body.password;
 
-        user_exists(user_name, pool).then((response)=>{
-            if(response.error){
+        user_exists(user_name, pool).then((response) => {
+            if (response.error) {
                 res.status(400).send();
-            }else{
-                if(response.resp.rows[0]){
+            } else {
+                if (response.resp.rows[0]) {
                     res.status(406).send(); // STATUS 406, Username existiert bereits
-                }else{ // User anlegen
+                } else { // User anlegen
                     let statement = "INSERT INTO users (username, password) VALUES ($1, $2)";
                     let values = [user_name, password];
                     pool.query(statement, values)
-                        .then(()=>{
-                            getUserID(user_name, pool).then((response)=>{
-                                if(response.error){
+                        .then(() => {
+                            getUserID(user_name, pool).then((response) => {
+                                if (response.error) {
                                     console.log(response.error);
                                     res.status(400).send();
                                 }
-                                else{
+                                else {
                                     let uuid = uuidv4();
                                     let statement = "INSERT INTO sessions (sessionkey, user_id) VALUES ($1, $2)";
                                     let values = [uuid, response.resp.rows[0].user_id];
                                     pool.query(statement, values)
-                                        .then(()=>{
+                                        .then(() => {
                                             res.send(uuid); // hier euer cookie
                                         })
-                                        .catch((err)=>{
+                                        .catch((err) => {
                                             console.log(err);
                                             res.status(400).send();
                                         })
                                 }
                             })
                         })
-                        .catch((err)=>{
+                        .catch((err) => {
                             res.status(500).send();
                         })
                 }

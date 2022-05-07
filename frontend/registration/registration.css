@@ -30,7 +30,11 @@ h2 {
     font-size: 18px;
     font-weight: 400;
 }
-
+#password-bar{
+    height: 5px;
+    background-color: black;
+    display: none;
+}
 input {
     outline: none;
     display: block;

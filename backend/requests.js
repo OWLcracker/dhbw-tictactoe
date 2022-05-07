@@ -65,6 +65,36 @@ app.post('/login', (req, res) => {
     });
 
 });
+    app.post('/register', (req, res) => {
+
+        let user_name = req.body.user;
+        let password = req.body.password;
+
+        user_exists(user_name, pool).then((response)=>{
+            if(response.error){
+                res.status(400).send();
+            }else{
+                if(response.resp.rows[0]){
+                    res.status(406).send(); // STATUS 406, Username existiert bereits
+                }else{ // User anlegen
+                    let statement = "INSERT INTO users (username, password) VALUES ($1, $2)";
+                    let values = [user_name, password];
+
+                    pool.query(statement, values, (err, resp) => {
+                        if (err) {
+                            console.log(err.stack)
+                            res.end("fail");
+                        } else {
+                            res.end("worked");
+
+                        }
+                    })
+                }
+            }
+        });
+
+
+    });
 }
 
 module.exports = {

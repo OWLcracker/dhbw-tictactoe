@@ -4,13 +4,14 @@
     gameHintElem = document.getElementById("gameHint");
     scoresElem = document.querySelectorAll(".scoreValue")
     fieldsElem = document.querySelectorAll("#grid button");
+    restartElem = document.getElementById("restart");
 
     grid = document.getElementById("grid");
     grid.addEventListener("mouseover", hoverEffectIn);
     grid.addEventListener("mouseout", hoverEffectOut);
     grid.addEventListener("click", playerTurn);
 
-    document.getElementById("restart").addEventListener("click", restart);
+    restartElem.addEventListener("click", restart);
     document.getElementById("menu").addEventListener("click", menu);
 
     initGame();
@@ -37,6 +38,7 @@ function initGame() {
 
 function startGame() {
     // Reset game parameters
+    restartElem.disabled = true;
     for (let i = 0; i < fieldsElem.length; i++) {
         fieldsElem[i].setAttribute("aria-label", "");
         fieldsElem[i].removeAttribute("disabled");
@@ -89,6 +91,9 @@ function playerTurn(e) {
         // It's computer's turn now
         gameHintElem.innerHTML = "Waiting for player " + computer + "'s turn.";
         setTimeout(function() { computerTurn(); }, delay);
+    } else {
+        // Game has ended
+        restartElem.disabled = false;
     }
 }
 
@@ -102,6 +107,9 @@ function computerTurn() {
         // It's player's turn now
         gameHintElem.innerHTML = "It's your turn.";
         enableRemainingFields();
+    } else {
+        // Game has ended
+        restartElem.disabled = false;
     }
 }
 

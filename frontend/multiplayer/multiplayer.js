@@ -15,6 +15,8 @@ grid.addEventListener("mouseover", hoverEffectIn);
 grid.addEventListener("mouseout", hoverEffectOut);
 grid.addEventListener("click", playerTurn);
 
+opponentIsWaitingForRestart = playerIsWaitingForRestart = false;
+
 restartElem.addEventListener("click", restart);
 document.getElementById("menu").addEventListener("click", menu);
 

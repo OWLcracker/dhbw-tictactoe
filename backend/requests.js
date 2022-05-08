@@ -150,8 +150,7 @@ const posts = (app, pool) => {
                 getUserID(user_name, pool).then((user_id) => {
                     console.log(user_id.resp.rows[0]);
                     getSession(user_id.resp.rows[0].user_id, pool).then((session) => {
-                        console.log(session);
-                        res.send(session.rows[0].sessionkey);
+                        res.send(session.rows[0]);
                     }).catch((err) => {
                         res.send(err);
                     })

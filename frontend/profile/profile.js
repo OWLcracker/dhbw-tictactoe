@@ -1,14 +1,4 @@
-let usernameElem,
-    errorUsernameElem,
-    currentPasswordElem,
-    newPasswordElem,
-    newPasswordRepeatElem,
-    errorPasswordElem;
 
-let username = "Jonas",
-    password;
-
-window.addEventListener("load", () => {
     usernameElem = document.getElementById("username");
     usernameElem.value = username;
     errorUsernameElem = document.getElementById("errorUsername")
@@ -21,7 +11,7 @@ window.addEventListener("load", () => {
     document.getElementById("savePassword").addEventListener("click", savePassword);
     document.getElementById("discardPassword").addEventListener("click", discardPassword);
     document.getElementById("menu").addEventListener("click", menu);
-});
+
 
 function saveUsername() {
     // Check input
@@ -58,5 +48,5 @@ function discardPassword() {
 }
 
 function menu() {
-    window.open("../menu/menu.html", "_self");
+    location.href = "#/menu/";
 }

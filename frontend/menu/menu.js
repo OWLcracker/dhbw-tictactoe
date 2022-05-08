@@ -14,11 +14,11 @@ function multiplayer() {
 }
 
 function history() {
-    window.open("../history/history.html", "_self");
+    location.href = "#/history/";
 }
 
 function profile() {
-    window.open("../profile/profile.html", "_self");
+    location.href = "#/profile/";
 }
 
 function logout() {

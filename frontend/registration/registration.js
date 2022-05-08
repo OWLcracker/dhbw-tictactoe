@@ -65,7 +65,7 @@ async function register() {
             errorElem.style.display = "block";
         }
         else if (response.status===200) {
-            window.open("../menu/menu.html", "_self");
+            location.href = "#/menu/";
         } else if (response.status===406) {
             errorElem.innerHTML = 'Error. User already exists.'
             errorElem.style.display = "block";

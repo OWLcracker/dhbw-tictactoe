@@ -63,8 +63,13 @@ window.addEventListener("load", () => {
             url: "^/register/$",
             show: () => swapContent("/registration/registration", "Register"),
         },{
+            url: "^/profile/$",
+            show: () => swapContent("/profile/profile", "Profile"),
+        },{
+            url: "^/history/$",
+            show: () => swapContent("/history/history", "History"),
+        },{
             url: ".*",
-            show: () => swapContent("page-not-found", "Seite nicht gefunden"),
         }
     ];
 

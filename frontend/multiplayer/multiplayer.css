@@ -73,7 +73,6 @@ h1 {
 
 footer > button {
     background: #fff;
-    cursor: pointer;
     width: 50vw;
     max-width: 300px;
     padding: 10px 15px;
@@ -87,10 +86,15 @@ footer > button {
     font-family: "Comic Sans MS";
 }
 
-footer > button:hover {
+#restart:disabled {
+    background: rgb(105, 105, 105) !important;
+}
+
+footer > button:hover:not([disabled]) {
     background: #0b557c !important;
     color: #fff;
     text-decoration-line: underline;
+    cursor: pointer;
 }
 
 #menu {

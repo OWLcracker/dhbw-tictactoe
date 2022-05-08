@@ -99,30 +99,32 @@ function uuidv4() {
 }
 
 const getSession = async (user, pool) => {
-    let statement = "Select * from sessions as sess, users where sess.user_id = users.user_id and sess.user_id = $1";
+    let statement = "Select * from sessions as sess natural join users where sess.user_id = $1";
     let values = [user];
+    let resp, error;
     try {
-        resp = await pool.query(statement, values)
+        resp = await pool.query(statement, values);
         if (resp.rows[0]) {
-            const date = new Date(resp.rows[0].creationDate);
-            if (date.getTime() + (1000 * 60 * 60 * 24) > new Date().getTime()) {
-                return resp.rows[0];
+            const date = new Date(resp.rows[0].creation_date);
+            if (date.getTime() + (1000 * 60 * 60 * 24) > new Date().getTime()) { 
+                return resp;
             } else {
                 let uuid = uuidv4();
-                let statement = "INSERT INTO sessions (sessionkey, user_id) VALUES ($1, $2)";
-                let values = [uuid, response.resp.rows[0].user_id];
-                pool.query(statement, values)
-                    .then(() => {
-                        res.send(uuid); // hier euer cookie
-                    })
+                let statement = "UPDATE sessions SET sessionkey = $1, creation_date = $3 WHERE user_id = $2 RETURNING *";
+                let values = [uuid, resp.rows[0].user_id, new Date()];
+                resp = await pool.query(statement, values)
                     .catch((err) => {
                         console.log(err);
-                        res.status(400).send();
-                    })
+                    });
+                return resp;
             }
         }
     } catch (err) {
-        return false;
+        error = err;
+    }
+    return {
+        resp,
+        error
     }
 }
 
@@ -146,7 +148,9 @@ const posts = (app, pool) => {
         user_authenticate(user_name, password, pool).then((bool) => {
             if (bool) {
                 getUserID(user_name, pool).then((user_id) => {
+                    console.log(user_id.resp.rows[0]);
                     getSession(user_id.resp.rows[0].user_id, pool).then((session) => {
+                        console.log(session);
                         res.send(session.rows[0].sessionkey);
                     }).catch((err) => {
                         res.send(err);

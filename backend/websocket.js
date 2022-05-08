@@ -29,8 +29,8 @@ function openServer() {
       wsOnMessage(ws2, ws1, message);
     });
 
-    ws1.send("start_p1"+clientUsernames.get(ws1));
-    ws2.send("start_p2"+clientUsernames.get(ws2));
+    ws1.send("start_p1"+clientUsernames.get(ws2));
+    ws2.send("start_p2"+clientUsernames.get(ws1));
 
     clientPairs.set(ws1, ws2);
     clientPairs.set(ws2, ws1);

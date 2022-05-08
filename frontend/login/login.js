@@ -44,6 +44,8 @@ async function login() {
         user.session_key= session.sessionkey;
         user.session_creationDate = session.creation_date;
         user.id = session.user_id;
+        setCookie();
+        console.log(document.cookie);
         errorWrong.style.display = "none";
         errorEmptyUsername.style.display = "none";
         errorEmptyPassword.style.display = "none";

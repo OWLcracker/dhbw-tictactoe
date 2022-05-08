@@ -39,6 +39,21 @@ const getUserID = async (user_id, pool) => {
     }
 }
 
+const getUserIDbySession = async (sessionkey, pool) => {
+    let statement = "Select user_id from sessions where sessionkey = $1";
+    let values = [sessionkey];
+    let resp, error;
+    try {
+        resp = await pool.query(statement, values)
+    } catch (err) {
+        error = err;
+    }
+    return {
+        resp,
+        error
+    }
+}
+
 const getUserName = async (sessionkey, pool) => {
     let statement = "Select username from users, sessions where sessions.user_id = users.user_id and sessions.sessionkey = $1";
     let values = [sessionkey];
@@ -183,5 +198,6 @@ const posts = (app, pool) => {
 
 module.exports = {
     gets,
-    posts
+    posts,
+    getUserName
 }

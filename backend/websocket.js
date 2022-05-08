@@ -1,16 +1,20 @@
 const WebSocket = require("ws");
+const {getUserID} = require('./requests').getUserName();
+const index = require('./index');
 
 function openServer() {
+  const pool = index.pool;
   console.log("Server started");
 
   const wss = new WebSocket.Server({ port: 8080 });
   let queue = undefined;
+  const clients = new Map();
 
   function wsOnMessage(wsSelf, wsOther, message) {
     const msg = message.toString();
 
     if (msg.startsWith('move:') || msg === 'restart' || msg === 'stop') {
-      wsOther.send(msg);
+      if(clients.has(wsSelf) && clients.has(wsOther)) wsOther.send(msg);
     }
   }
 
@@ -22,8 +26,8 @@ function openServer() {
       wsOnMessage(ws2, ws1, message);
     });
 
-    ws1.send("start_p1");
-    ws2.send("start_p2");
+    ws1.send("start_p1"+clients.get(ws1));
+    ws2.send("start_p2"+clients.get(ws2));
 
     console.log("Match started.");
   }
@@ -31,10 +35,15 @@ function openServer() {
   wss.on("connection", (ws) => {
     ws.on("message", (message) => {
       const msg = message.toString();
-      if(msg.startsWith("ID:")) {
-
-      }
-      if (msg.startsWith("QUEUE")) {
+      if(msg.startsWith("SESSION:")) {
+        const session = msg.split(":")[1];
+        getUserID(session, pool).then((sessionresp) => {
+          const UserID = sessionresp.resp.rows[0].user_id;
+          clients.set(ws, UserID);
+        }).catch((err) => {
+          console.log(err);
+        });
+      }else if (msg.startsWith("QUEUE") && clients.has(ws)) {
         if (queue === undefined) {
           queue = ws;
           console.log("Queueing...");
@@ -49,6 +58,7 @@ function openServer() {
       if (queue === ws) {
         queue = undefined;
       }
+      clients.delete(ws);
       console.log("Client disconnected.");
     });
   });

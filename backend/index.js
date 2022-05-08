@@ -50,6 +50,7 @@ pool.connect((err, client, release) => {
     })
 })
 
+exports.pool = pool;
 gets(app,pool);
 posts(app,pool);
 openServer();

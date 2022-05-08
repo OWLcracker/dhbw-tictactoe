@@ -245,6 +245,10 @@ function checkWinner() {
         gameHintElem.innerHTML = "Congratulations, you have won!"
         scores[0]++;
         scoresElem[0].innerHTML = scores[0];
+
+        // Send game stats to websocket server to store it in database
+        // Only winner is sending to ensure the game is not saved twice
+        socket.send('finished');
     } else if (winner === opponent) {
         gameHintElem.innerHTML = "Oh no, you have lost!"
         scores[1]++;
@@ -267,6 +271,12 @@ function checkFinished() {
 
     if (gridIsFull) {
         gameHintElem.innerHTML = "It's a draw."
+
+        // Send game stats to websocket server to store it in database
+        // If draw only p1 is sennding to ensure the game is not saved twice
+        if (player === 'x') {
+            socket.send('draw');
+        }
     }
 
     return gridIsFull;

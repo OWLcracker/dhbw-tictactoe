@@ -69,6 +69,28 @@ const getUserName = async (sessionkey, pool) => {
     }
 }
 
+const getUserBySession = async (sessionkey, pool) => {
+    let statement = "Select users.user_id, username from users, sessions where sessions.user_id = users.user_id and sessions.sessionkey = $1";
+    let values = [sessionkey];
+    let resp, error;
+    try {
+        resp = await pool.query(statement, values)
+    } catch (err) {
+        error = err;
+    }
+    return {
+        resp,
+        error
+    }
+}
+
+const addNewGame = async (p_win, p_loose, is_draw, pool) => {
+    let statement = "INSERT INTO games (p_win, p_loose, is_draw) VALUES ($1, $2, $3)";
+    let values = [p_win, p_loose, is_draw];
+    console.log(values);
+    pool.query(statement, values);
+}
+
 function uuidv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -199,5 +221,6 @@ const posts = (app, pool) => {
 module.exports = {
     gets,
     posts,
-    getUserName
+    addNewGame,
+    getUserBySession
 }

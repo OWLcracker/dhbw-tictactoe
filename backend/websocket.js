@@ -31,6 +31,9 @@ function openServer() {
   wss.on("connection", (ws) => {
     ws.on("message", (message) => {
       const msg = message.toString();
+      if(msg.startsWith("ID:")) {
+
+      }
       if (msg.startsWith("QUEUE")) {
         if (queue === undefined) {
           queue = ws;

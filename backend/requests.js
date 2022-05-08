@@ -39,6 +39,21 @@ const getUserID = async (user_id, pool) => {
     }
 }
 
+const getUserName = async (sessionkey, pool) => {
+    let statement = "Select username from users, sessions where sessions.user_id = users.user_id and sessions.sessionkey = $1";
+    let values = [sessionkey];
+    let resp, error;
+    try {
+        resp = await pool.query(statement, values)
+    } catch (err) {
+        error = err;
+    }
+    return {
+        resp,
+        error
+    }
+}
+
 function uuidv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -95,12 +110,7 @@ const posts = (app, pool) => {
             if (bool) {
                 getUserID(user_name, pool).then((user_id) => {
                     getSession(user_id.resp.rows[0].user_id, pool).then((session) => {
-                         const sessionkey = 'aölskdjfaölskdfjaösdlkf';
-                        // res.setHeader('Access-Control-Allow-Headers', true);
-                         res.setHeader('Set-Cookie', ['sessionkey=' + sessionkey + ';Path=/;Secure' ]);
-                        // console.log(res.getHeaders());
-                        res.send(session);
-
+                        res.send(session.rows[0].sessionkey);
                     }).catch((err) => {
                         res.send(err);
                     })
@@ -114,6 +124,16 @@ const posts = (app, pool) => {
         });
 
     });
+
+    app.post('/getName', (req, res) => {
+        let sessionkey = req.body.sessionkey;
+        getUserName(sessionkey, pool).then((user) => {
+            res.send(user.resp.rows[0].username);
+        }).catch((err) => {
+            res.send(err);
+        });
+    });
+
     app.post('/register', (req, res) => {
 
         let user_name = req.body.user;

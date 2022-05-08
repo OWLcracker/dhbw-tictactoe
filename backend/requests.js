@@ -91,6 +91,26 @@ const addNewGame = async (p_win, p_loose, is_draw, pool) => {
     pool.query(statement, values);
 }
 
+const getHistory = async (sessionkey, pool) => {
+    let statement = 
+          "SELECT games.time, games.is_draw, p1.username AS p_win, p2.username AS p_loose "
+        + "FROM games LEFT JOIN users AS p1 ON games.p_win = p1.user_id LEFT JOIN users AS p2 ON games.p_loose = p2.user_id " 
+        + "WHERE p_win IN (SELECT user_id FROM sessions WHERE sessionkey = $1) "
+        + "OR p_loose IN (SELECT user_id FROM sessions WHERE sessionkey = $1)";
+    let values = [sessionkey];
+    let resp, error;
+    try {
+        resp = await pool.query(statement, values)
+    } catch (e) {
+        console.log(e);
+        error = e;
+    }
+    return {
+        resp,
+        error
+    }
+}
+
 function uuidv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -99,7 +119,7 @@ function uuidv4() {
 }
 
 const getSession = async (user, pool) => {
-    let statement = "Select * from sessions as sess natural join users where sess.user_id = $1";
+    let statement = "Select sess.sessionkey, sess.user_id, sess.creation_date from sessions as sess natural join users where sess.user_id = $1";
     let values = [user];
     let resp, error;
     try {
@@ -169,6 +189,15 @@ const posts = (app, pool) => {
         let sessionkey = req.body.sessionkey;
         getUserName(sessionkey, pool).then((user) => {
             res.send(user.resp.rows[0].username);
+        }).catch((err) => {
+            res.send(err);
+        });
+    });
+
+    app.post('/getHistory', (req, res) => {
+        let sessionkey = req.body.sessionkey;
+        getHistory(sessionkey, pool).then((user) => {
+            res.send(user.resp.rows);
         }).catch((err) => {
             res.send(err);
         });

@@ -1,0 +1,46 @@
+body {
+    background-attachment: fixed;
+    background-image: linear-gradient(to bottom right, #249be7, #003c62);
+    font-family: "Arial";
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    color: #fff;
+    font-size: 70px;
+    text-align: center;
+    font-family: "Comic Sans MS";
+}
+
+.form {
+    background: #ffffff;
+    width: 70vw;
+    max-width: 450px;
+    margin-bottom: 20px;
+    padding: min(5vw, 40px) min(5vw, 40px) min(2.5vw, 20px) min(5vw, 40px);
+    box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);
+}
+
+footer > button {
+    background: #cecece;
+    cursor: pointer;
+    width: 50vw;
+    max-width: 300px;
+    padding: 10px 15px;
+    border: 0;
+    color: #000;
+    font-size: 18px;
+    font-weight: 400;
+    margin-top: 2vmin;
+    margin-left: min(5vw, 40px);
+    margin-right: min(5vw, 40px);
+    font-family: "Comic Sans MS";
+}
+
+footer > button:hover {
+    background: #0b557c !important;
+    color: #fff;
+    text-decoration-line: underline;
+}

@@ -33,8 +33,7 @@ function initSocket() {
         console.log('Socket connection established successfully.');
 
         // Get username from webserver
-        session_key = '9a6c2b88-ea60-43cd-bf93-3bb438e61f9f';
-        let sessionJson = JSON.parse('{ "sessionkey": "' + session_key + '" }');
+        let sessionJson = JSON.parse('{ "sessionkey": "' + user.session_key + '" }');
         await fetch('http://localhost:3000/getName', {
                 headers: {
                     'Content-Type': 'application/json'
@@ -50,7 +49,7 @@ function initSocket() {
             });
 
         // Authenticate socket on websocket server
-        socket.send('SESSION:' + session_key);
+        socket.send('SESSION:' + user.session_key);
     }
 
     socket.onmessage = function (event) {

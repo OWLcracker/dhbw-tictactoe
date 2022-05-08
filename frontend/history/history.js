@@ -4,8 +4,7 @@ historyTableElem = document.getElementById("historyTable");
 getHistory();
 
 async function getHistory() {
-    session_key = '9a6c2b88-ea60-43cd-bf93-3bb438e61f9f';
-    let sessionJson = JSON.parse('{ "sessionkey": "' + session_key + '" }');
+    let sessionJson = JSON.parse('{ "sessionkey": "' + user.session_key + '" }');
     await fetch('http://localhost:3000/getHistory', {
         headers: {
             'Content-Type': 'application/json'
@@ -23,23 +22,60 @@ async function getHistory() {
 }
 
 function createTable(historyData) {
+    console.log(historyData);
+    let tb = document.createElement('tbody');
+    let tr = document.createElement('tr');
+
+    let th1 = document.createElement('th');
+    let th2 = document.createElement('th');
+    let th3 = document.createElement('th');
+    let th4 = document.createElement('th');
+
+    th1.appendChild(document.createTextNode('Date'));
+    th2.appendChild(document.createTextNode('Winner'));
+    th3.appendChild(document.createTextNode('Looser'));
+    th4.appendChild(document.createTextNode('Draw?'));
+
+    tr.appendChild(th1);
+    tr.appendChild(th2);
+    tr.appendChild(th3);
+    tr.appendChild(th4);
+
+    tb.appendChild(tr);
+
     for (let i = 0; i < historyData.length; i++) {
-        let tr = document.createElement('tr');
+        tr = document.createElement('tr');
 
         let td1 = document.createElement('td');
         let td2 = document.createElement('td');
         let td3 = document.createElement('td');
+        let td4 = document.createElement('td');
 
-        td1.appendChild(document.createTextNode(historyData[i].time));
+        td1.appendChild(document.createTextNode(convertTimestamp(historyData[i].time)));
         td2.appendChild(document.createTextNode(historyData[i].p_win));
         td3.appendChild(document.createTextNode(historyData[i].p_loose));
+        if (historyData[i].is_draw) {
+            td4.appendChild(document.createTextNode('X'));
+        } else {
+            td4.appendChild(document.createTextNode(''));
+        }
 
         tr.appendChild(td1);
         tr.appendChild(td2);
         tr.appendChild(td3);
+        tr.appendChild(td4);
 
-        historyTableElem.appendChild(tr);
+        tb.appendChild(tr);
     }
+
+    historyTableElem.appendChild(tb);
+}
+
+function convertTimestamp(timestamp) {
+    const timestampSplit = timestamp.split('T');
+    const date = timestampSplit[0];
+    const time = timestampSplit[1].substring(0, 8);
+    return date + ' ' + time;
 }
 
 function menu() {

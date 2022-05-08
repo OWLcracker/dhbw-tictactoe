@@ -118,6 +118,12 @@ function uuidv4() {
     });
 }
 
+function setUsername(sessionkey, username, pool) {
+    let statement = "UPDATE users SET username = $1 WHERE user_id = (SELECT user_id FROM sessions WHERE sessionkey = $2)";
+    let values = [username, sessionkey];
+    pool.query(statement, values);
+}
+
 const getSession = async (user, pool) => {
     let statement = "Select sess.sessionkey, sess.user_id, sess.creation_date from sessions as sess natural join users where sess.user_id = $1";
     let values = [user];
@@ -201,6 +207,13 @@ const posts = (app, pool) => {
         }).catch((err) => {
             res.send(err);
         });
+    });
+
+    app.post('/setName', (req, res) => {
+        let sessionkey = req.body.sessionkey;
+        let username = req.body.username;
+        setUsername(sessionkey, username, pool);
+        res.send("Success");
     });
 
     app.post('/register', (req, res) => {

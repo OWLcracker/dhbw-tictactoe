@@ -1,50 +1,55 @@
+usernameElem = document.getElementById("username");
+errorUsernameElem = document.getElementById("errorUsername")
+document.getElementById("saveUsername").addEventListener("click", saveUsername);
+document.getElementById("discardUsername").addEventListener("click", discardUsername);
+document.getElementById("menu").addEventListener("click", menu);
 
-    usernameElem = document.getElementById("username");
-    usernameElem.value = username;
-    errorUsernameElem = document.getElementById("errorUsername")
-    currentPasswordElem = document.getElementById("currentPassword");
-    newPasswordElem = document.getElementById("newPassword");
-    newPasswordRepeatElem = document.getElementById("newPasswordRepeat");
-    errorPasswordElem = document.getElementById("errorPassword")
-    document.getElementById("saveUsername").addEventListener("click", saveUsername);
-    document.getElementById("discardUsername").addEventListener("click", discardUsername);
-    document.getElementById("savePassword").addEventListener("click", savePassword);
-    document.getElementById("discardPassword").addEventListener("click", discardPassword);
-    document.getElementById("menu").addEventListener("click", menu);
+getUsername();
 
+async function getUsername() {
+    // Get username from webserver
+    let sessionJson = JSON.parse('{ "sessionkey": "' + user.session_key + '" }');
+    await fetch('http://localhost:3000/getName', {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(sessionJson),
+    })
+        .then(async function (data) {
+            usernameElem.value = await data.text();
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
 
-function saveUsername() {
+async function saveUsername() {
     // Check input
     if (usernameElem.value === "") {
         errorUsernameElem.style.display = "block";
         return;
     } else {
         errorUsernameElem.style.display = "none";
-        username = usernameElem.value;
+
+        let userJson = JSON.parse('{ "sessionkey": "' + user.session_key + '", "username": "' + usernameElem.value + '" }');
+        console.log(userJson);
+        await fetch('http://localhost:3000/setName',
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                body: JSON.stringify(userJson)
+            }).catch((error) => {
+                console.error('Error:', error);
+                isError = true;
+            });
     }
 }
 
 function discardUsername() {
-    usernameElem.value = username;
-}
-
-function savePassword() {
-    // Check input
-    if (currentPasswordElem.value === "" || newPasswordElem.value === "" || newPasswordRepeatElem.value === ""
-        || newPasswordElem.value !== newPasswordRepeatElem.value) {
-        errorPasswordElem.style.display = "block";
-        return;
-    } else {
-        errorPasswordElem.style.display = "none";
-        password = newPasswordElem.value;
-        discardPassword();
-    }
-}
-
-function discardPassword() {
-    currentPasswordElem.value = "";
-    newPasswordElem.value = "";
-    newPasswordRepeatElem.value = "";
+    getUsername();
 }
 
 function menu() {

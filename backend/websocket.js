@@ -1,5 +1,5 @@
 const WebSocket = require("ws");
-const {getUserID} = require('./requests').getUserName();
+const {getUserName} = require('./requests');
 const index = require('./index');
 
 function openServer() {
@@ -37,9 +37,10 @@ function openServer() {
       const msg = message.toString();
       if(msg.startsWith("SESSION:")) {
         const session = msg.split(":")[1];
-        getUserID(session, pool).then((sessionresp) => {
-          const UserID = sessionresp.resp.rows[0].user_id;
-          clients.set(ws, UserID);
+        getUserName(session, pool).then((sessionresp) => {
+          const username = sessionresp.resp.rows[0].username;
+          clients.set(ws, username);
+          ws.send("Authenticated");
         }).catch((err) => {
           console.log(err);
         });

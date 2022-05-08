@@ -16,6 +16,16 @@ h1 {
     font-family: "Comic Sans MS";
 }
 
+#usernameArea {
+    color: #fff;
+    font-family: "Comic Sans MS";
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 2vw;
+    margin-right: 2vw;
+}
+
 #gameArea {
     display: flex;
 }

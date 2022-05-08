@@ -6,7 +6,7 @@ window.addEventListener('popstate', function (event) {
 });
 
 gameHintElem = document.getElementById("gameHint");
-scoresElem = document.querySelectorAll(".scoreValue")
+scoresElem = document.querySelectorAll(".scoreValue");
 fieldsElem = document.querySelectorAll("#grid button");
 restartElem = document.getElementById("restart");
 
@@ -29,17 +29,41 @@ gameHintElem.innerHTML = "Waiting for opponent to connect...";
 function initSocket() {
     socket = new WebSocket('ws://localhost:8080');
 
-    socket.onopen = function (e) {
+    socket.onopen = async function (e) {
         console.log('Socket connection established successfully.');
-        socket.send('QUEUE');
-        console.log('Waiting for opponent to connect...');
+
+        // Get username from webserver
+        session_key = '9a6c2b88-ea60-43cd-bf93-3bb438e61f9f';
+        let sessionJson = JSON.parse('{ "sessionkey": "' + session_key + '" }');
+        await fetch('http://localhost:3000/getName', {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                body: JSON.stringify(sessionJson),
+            })
+            .then(async function(data) {
+                p1Username = await data.text();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
+        // Authenticate socket on websocket server
+        socket.send('SESSION:' + session_key);
     }
 
     socket.onmessage = function (event) {
         const msg = event.data.toString();
 
-        if (msg === 'start_p1' || msg === 'start_p2') {
-            isStartingPlayer = msg === 'start_p1';
+        if (msg === 'Authenticated') {
+            socket.send('QUEUE');
+            console.log('Waiting for opponent to connect...');
+        } else if (msg.startsWith('start_p1') || msg.startsWith('start_p2')) {
+            isStartingPlayer = msg.startsWith('start_p1');
+
+            p2Username = msg.substring(8);
+
             initGame();
             startGame();
         } else if (msg.startsWith('move:')) {
@@ -57,11 +81,11 @@ function initSocket() {
 
             // Check if game was running
             if (restartElem.disabled) {
-                gameHintElem.innerHTML = "Opponent disconnected. You've won.";
+                gameHintElem.innerHTML = p2Username + " disconnected. You've won.";
                 scores[0]++;
                 scoresElem[0].innerHTML = scores[0];
             } else {
-                gameHintElem.innerHTML = "Opponent disconnected.";
+                gameHintElem.innerHTML = p2Username + " disconnected.";
                 restartElem.disabled = true;
             }
         }
@@ -93,8 +117,8 @@ function initGame() {
         opponent = 'x';
     }
 
-    scoresLabelElem[0].innerHTML = "Score " + player + ":";
-    scoresLabelElem[1].innerHTML = "Score " + opponent + ":";
+    scoresLabelElem[0].innerHTML = p1Username;
+    scoresLabelElem[1].innerHTML = p2Username;
     scoresElem[0].innerHTML = 0;
     scoresElem[1].innerHTML = 0;
 
@@ -118,7 +142,7 @@ function startGame() {
         enableRemainingFields();
     } else {
         // Opponent starts
-        gameHintElem.innerHTML = "You're player " + player + ". Waiting for player " + opponent + "'s turn.";
+        gameHintElem.innerHTML = "You're player " + player + ". Waiting for player " + p2Username + "'s turn.";
     }
 }
 
@@ -157,7 +181,7 @@ function playerTurn(e) {
 
     if (!isWinnerExisting && !isFinished) {
         // It's opponent's turn now
-        gameHintElem.innerHTML = "Waiting for player " + opponent + "'s turn.";
+        gameHintElem.innerHTML = "Waiting for player " + p2Username + "'s turn.";
     } else {
         // Game has ended
         restartElem.disabled = false;
@@ -258,7 +282,7 @@ function restart() {
         startGame();
     } else {
         playerIsWaitingForRestart = true;
-        gameHintElem.innerHTML = "Waiting for opponent...";
+        gameHintElem.innerHTML = "Waiting for player " + p2Username + "...";
     }
 }
 

@@ -226,11 +226,11 @@ const posts = (app, pool) => {
                                 }
                                 else {
                                     let uuid = uuidv4();
-                                    let statement = "INSERT INTO sessions (sessionkey, user_id) VALUES ($1, $2)";
+                                    let statement = "INSERT INTO sessions (sessionkey, user_id) VALUES ($1, $2) RETURNING *";
                                     let values = [uuid, response.resp.rows[0].user_id];
                                     pool.query(statement, values)
-                                        .then(() => {
-                                            res.send(uuid); // hier euer cookie
+                                        .then((response) => {
+                                            res.send(response.rows[0]);
                                         })
                                         .catch((err) => {
                                             console.log(err);

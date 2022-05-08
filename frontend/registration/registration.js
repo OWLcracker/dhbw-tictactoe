@@ -47,7 +47,7 @@ async function register() {
     else {
         errorElem.style.display = "none";
 
-        let userJson = JSON.parse('{ "user": "' + username.value + '", "password": "' + password.value + '" }');
+        let userJson = JSON.parse('{ "user": "' + usernameElem.value + '", "password": "' + passwordElem.value + '" }');
         let isError = false;
         let response = await fetch('http://localhost:3000/register',
             {
@@ -65,6 +65,11 @@ async function register() {
             errorElem.style.display = "block";
         }
         else if (response.status===200) {
+            let session = await response.json();
+            console.log(session);
+            user.session_key= session.sessionkey;
+            user.session_creationDate = session.creation_date;
+            user.id = session.user_id;
             location.href = "#/menu/";
         } else if (response.status===406) {
             errorElem.innerHTML = 'Error. User already exists.'

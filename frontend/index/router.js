@@ -5,6 +5,7 @@ class Router {
         this._routes = routes;
         this._started = false;
 
+
         window.addEventListener("hashchange", () => this._handleRouting());
     }
 
@@ -21,6 +22,10 @@ class Router {
         if (url.length === 0) {
             url = "/";
         }
+        if(!this.checkAuthentication() && url !== "/login/" && url !=="/register/"){
+            location.href = "#/login/";
+            return;
+        }
 
         let matches = null;
         let route = this._routes.find(p => matches = url.match(p.url));
@@ -31,5 +36,14 @@ class Router {
         }
 
         route.show(matches);
+    }
+    checkAuthentication(){
+        console.log(user);
+        if(user.session_key === null || user.session_creationDate + 1000 * 60 * 60 * 24  < Date.now()){
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 }

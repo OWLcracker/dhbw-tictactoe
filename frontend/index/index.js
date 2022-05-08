@@ -8,6 +8,9 @@ window.addEventListener("load", () => {
        let htmlString = await response.text();
        let newDoc = parser.parseFromString(htmlString, 'text/html');
 
+       let scriptOld = document.getElementById("script");
+       scriptOld.remove();
+
        //Replace Main of the original HTML
        let mainOld = document.getElementById("main");
        mainOld.id = "mainOld";
@@ -26,20 +29,20 @@ window.addEventListener("load", () => {
 
 
        //Replace Scripts of the original HTML
-       let script = document.getElementById("script");
-       script.remove();
-       script = document.createElement("script");
+       let script = document.createElement("script");
        script.setAttribute("id", "script");
        response = await fetch( ".." + id + ".js");
        let scriptString = await response.text();
        script.innerHTML = scriptString;
-       document.body.appendChild(script);
 
        //Wait until the end to remove old style and make new main element visible
        //to ensure a smooth transition
        mainOld.remove();
        styleOld.remove();
        mainNew.style.display = "block";
+       document.body.appendChild(script);
+
+
        document.title = `${title}`;
     }
 
@@ -70,6 +73,7 @@ window.addEventListener("load", () => {
             show: () => swapContent("/history/history", "History"),
         },{
             url: ".*",
+            //TODO:404 Seite
         }
     ];
 

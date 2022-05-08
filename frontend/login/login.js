@@ -24,7 +24,6 @@ async function login() {
     }
 
     let userJson = JSON.parse('{ "user": "' + username.value + '", "password": "'+ password.value + '" }');
-    console.log(userJson);
     let response = await fetch('http://localhost:3000/login',
         {
             headers: {
@@ -40,6 +39,11 @@ async function login() {
     console.log(response);
 
     if (response.status===200) {
+        let session = await response.json();
+
+        user.session_key= session.sessionkey;
+        user.session_creationDate = session.creation_date;
+        user.id = session.user_id;
         errorWrong.style.display = "none";
         errorEmptyUsername.style.display = "none";
         errorEmptyPassword.style.display = "none";

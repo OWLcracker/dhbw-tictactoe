@@ -22,5 +22,6 @@ function profile() {
 }
 
 function logout() {
+    resetSession();
     location.href = "#/login/";
 }

@@ -70,6 +70,8 @@ async function register() {
             user.session_key= session.sessionkey;
             user.session_creationDate = session.creation_date;
             user.id = session.user_id;
+            setCookie();
+            console.log(document.cookie);
             location.href = "#/menu/";
         } else if (response.status===406) {
             errorElem.innerHTML = 'Error. User already exists.'

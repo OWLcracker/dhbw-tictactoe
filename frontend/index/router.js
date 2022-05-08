@@ -38,11 +38,13 @@ class Router {
         route.show(matches);
     }
     checkAuthentication(){
-        console.log(user);
-        if(user.session_key === null || user.session_creationDate + 1000 * 60 * 60 * 24  < Date.now()){
+        console.log(document.cookie);
+        if(getCookieValue("id") === "" ){//|| user.session_creationDate + 1000 * 60 * 60 * 24  < Date.now()
             return false;
         }
         else {
+            user.id = getCookieValue("id");
+            user.session_key = getCookieValue("session_key");
             return true;
         }
     }
